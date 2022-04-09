@@ -8,6 +8,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'protect/index.html'
     context_object_name = 'category'
     queryset = CategoryUser.objects.all()
+    success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

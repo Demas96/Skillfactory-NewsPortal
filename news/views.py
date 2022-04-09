@@ -41,9 +41,6 @@ class PostDetailView(DetailView):
     queryset = Post.objects.all()
 
 
-
-
-
 class PostCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'post_create.html'
     permission_required = ('news.add_post',)
@@ -53,16 +50,23 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
         cats_id_list = list(map(int, request.POST.getlist('category')))
         category = Category.objects.filter(pk__in=cats_id_list)
         new_post = Post(type=request.POST['type'],
-                       header=request.POST['header'],
-                       text=request.POST['text'],
-                       author=Author.objects.get(pk=request.POST['author']),
-                       )
+                        header=request.POST['header'],
+                        text=request.POST['text'],
+                        author=Author.objects.get(pk=request.POST['author']),
+                        )
         if check_post_today(sender=Post, instance=new_post, **kwargs) < 3:
             new_post.save()
             for cat in category:
                 new_post.category.add(cat)
 
         return redirect('/news/')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        user = self.request.user
+        author = Author.objects.get(user=user)
+        initial['author'] = author
+        return initial
 
 
 class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

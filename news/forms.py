@@ -7,7 +7,10 @@ from django import forms
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ['type', 'header', 'text', 'author', 'category']
+        fields = ['author', 'type', 'header', 'text', 'category']
+        widgets = {
+            'author': forms.HiddenInput(),
+        }
 
 
 class SubForm(ModelForm):

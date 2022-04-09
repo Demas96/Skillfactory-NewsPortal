@@ -1,17 +1,15 @@
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
-<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
-<div> Здесь может содержаться персональная информация для каждого пользователя </div>
+<h1>Страница авторизованного пользователя {{request.user.username}}</h1>
+<div> Здесь может содержаться персональная информация для каждого пользователя </div><br>
 <h3>Ваши подписки:
-{% for cat in category %}
-    {{ cat }}
-{% endfor %}</h3>
-<p></p>
-
-
-
-
+    {% for cat in category %}
+        {% if request.user.id == cat.user_id %}
+            {{ cat }}
+        {% endif %}
+    {% endfor %}</h3>
+<br>
 {% if is_not_authors %}
 <button> <a href="sign/upgrade/">Стать автором</a> </button>
 {% endif %}
